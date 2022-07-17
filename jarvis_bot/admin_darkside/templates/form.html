@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Include stylesheet -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://snipp.ru/cdn/select2/4.0.13/dist/css/select2.min.css">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <div class="row justify-content-center">
+        <div class="col-6">
+            <h1>{{ form_title }}</h1>
+            <form method="post" enctype="multipart/form-data">
+                {% for field in form %}
+                    {% if loop.last %}
+                        <div class="form-group">
+                            {{ field.label(class="control-label d-none") }}
+                            {{ field(class="form-control") }}
+                        </div>
+                    {% elif 'date' in field.name %}
+                        <div class="form-group">
+                            {{ field.label(class="control-label") }}
+                            {{ field(class="form-control datetimepicker") }}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% elif 'city_id' in field.name %}
+                        <div class="form-group">
+                            {{ field.label(class="control-label") }}
+                            {{ field(class="form-control js-select2") }}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {#                    {% elif 'mail_text' in field.name %}#}
+                        {#                        {{ field.label(class="control-label") }}#}
+                        {#                        <div class="form-group" id="editor">#}
+                        {#                            {{ field(class="form-control") }}#}
+                        {#                            {% for error in field.errors %}#}
+                        {#                                <div class="alert alert-danger" role="alert">#}
+                        {#                                    {{ error }}#}
+                        {#                                </div>#}
+                        {#                            {% endfor %}#}
+                        {#                        </div>#}
+                    {% else %}
+                        <div class="form-group">
+                            {{ field.label(class="control-label") }}
+                            {{ field(class="form-control") }}
+                            {% for error in field.errors %}
+                                <div class="alert alert-danger" role="alert">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="btn btn-success">Сохранить</button>
+            </form>
+            <script type="text/javascript">
+                var toolbarOptions = ['bold', 'italic', 'underline', 'strike', 'link'];
+                var Bold = Quill.import('formats/bold');
+                var Italic = Quill.import('formats/italic');
+                Bold.tagName = 'B';
+                Italic.tagName = 'I';
+                Quill.register(Bold, true);
+                Quill.register(Italic, true);
+                var quill = new Quill('#mail_text', {
+                    theme: 'snow',
+                    modules: {
+                        toolbar: toolbarOptions
+                    },
+                    placeholder: 'Введите текст'
+                });
+                $(document).ready(function () {
+                    $('.datetimepicker').datetimepicker({
+                        locale: 'ru',
+
+                    });
+                });
+                $(document).ready(function () {
+                    $('.js-select2').select2({
+                        placeholder: "Выберите город",
+                        maximumSelectionLength: 2,
+                        language: "ru"
+                    });
+                });
+            </script>
+
+            <style type="text/css">
+                .select_wrp {
+                    width: 300px;
+                    margin: 0 auto;
+                }
+            </style>
+
+            {#            <script src="https://snipp.ru/cdn/jquery/2.1.1/jquery.min.js"></script>#}
+            <script src="https://snipp.ru/cdn/select2/4.0.13/dist/js/select2.min.js"></script>
+            {#            <script src="https://snipp.ru/cdn/select2/4.0.13/dist/js/i18n/ru.js"></script>#}
+        </div>
+    </div>
+{% endblock %}

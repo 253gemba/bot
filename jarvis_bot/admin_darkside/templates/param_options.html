@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="col">
+    <div class="row justify-content-center">
+        <h2>{{category_name}}</h2>
+    </div>
+        <table class="table table-bordered">
+    <div class="row">
+    <thead class="thead-dark">
+    <div class="col">
+        <nav class="navbar navbar-light bg-light">
+            <a href="/?cat=categories&from_category={{ back_id }}" class="btn btn-secondary">Назад к категориям</a>
+            <a href="{{url_for('add_item', cat=table_title)}}" class="btn btn-secondary">Добавить ➕</a>
+        </nav>
+    </div>
+    <tr>
+        {% for key in head_names %}
+        <th scope="col">{{key}}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    {% for item in items %}
+    <tbody>
+    <tr>
+        {% for key, value in item.items() %}
+        {% if key == 'option_name' %}
+        <th scope="col"><a href="/?cat=categories&option_id={{dict(item.items())['option_id']|string}}">{{value}}</a></th>
+        {% elif not key.startswith('_') %}
+        <th scope="col">{{value}}</th>
+        {% endif %}
+        {% endfor %}
+
+        <td>
+            <a href="{{url_for('edit_item', cat=table_title, id=item[id_name])}}" class="btn btn-warning">Редактировать 📝</a>
+            <a href="{{url_for('delete_item', cat=table_title, id=item[id_name])}}" class="btn btn-danger">❌</a>
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+    </div>
+        </table>
+</div>
+{% endblock %}

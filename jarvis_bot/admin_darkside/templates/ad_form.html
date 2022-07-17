@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Include stylesheet -->
+<style>
+.scale {
+transition: 1s; /* Время эффекта */
+}
+.scale:hover {
+{#z-index: -500;#}
+{#margin-left: 10%;#}
+transform: scale(10); /* Увеличиваем масштаб */
+}
+</style>
+<script language = "JavaScript">
+var bigsize = "250"; //Размер большой картинки
+var smallsize = "30"; //Размер маленькой картинки
+function changeSizeImage(im) {
+  if(im.height == bigsize) im.height = smallsize;
+  else im.height = bigsize;
+}
+</script>
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"><!-- Include the Quill library -->
+<div class="row justify-content-center">
+    <div class="col-6">
+        <h1>{{form_title}}</h1>
+        {% for photo in photos %}
+        <td>
+            <img src="{{ photo.photo_link }}"
+                 href="{{ photo.photo_link }}"
+                 height="30" title="Нажите, чтобы увеличить" onclick="changeSizeImage(this)">
+            <a href="/delete/ads_photos/{{photo.photo_id}}" class="btn btn-danger">❌</a>
+            <br>
+        </td>
+        {% endfor %}
+        <form method="post" enctype="multipart/form-data">
+            {% for field in form %}
+            {% if loop.last %}
+            <div class="form-group">
+                {{ field.label(class="control-label d-none") }}
+                {{ field(class="form-control")}}
+            </div>
+            {% elif 'date' in field.name %}
+                <div class="form-group">
+                {{ field.label(class="control-label") }}
+                {{ field(class="form-control datetimepicker")}}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+            <div class="form-group">
+                {{ field.label(class="control-label") }}
+                {{ field(class="form-control")}}
+                {% for error in field.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endfor %}
+            <button type="submit" class="btn btn-success">Сохранить</button>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.datetimepicker').datetimepicker({
+                    locale: 'ru',
+
+                });
+            });
+        </script>
+    </div>
+</div>
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<!-- Initialize Quill editor -->
+<script>
+  var quill = new Quill('#editor', {
+    theme: 'snow',
+      formats: 'bold italic'
+  });
+</script>
+{% endblock %}

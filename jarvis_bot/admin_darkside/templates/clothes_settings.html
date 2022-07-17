@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="col">
+    <div class="row justify-content-center">
+        <h2>{{category_name}}</h2>
+    </div>
+        <table class="table">
+    <div class="row">
+    <thead class="thead-dark">
+    <div class="col">
+        <nav class="navbar navbar-light bg-light">
+            <a href="/?cat=categories&{{ back_name }}={{ back_id }}" class="btn btn-secondary">Назад к категориям</a>
+{#            {% if is_add %}#}
+{#            <a href="{{url_for('add_item', cat=table_title if not add_table else add_table)}}" class="btn btn-secondary">Добавить ➕</a>#}
+{#            {% endif %}#}
+        </nav>
+    </div>
+    <tr>
+        {% for key in head_names %}
+        <th scope="col">{{key}}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    {% for item in items %}
+    <tbody>
+    <tr>
+        {% for key, value in item.items() %}
+        {% if key == key_name %}
+        <th scope="col"><a href="/?cat=categories&{{ next_name }}={{dict(item.items())[id_name]|string}}&set_category_id={{ category_id }}&part_brand_id={{ brand_id }}">{{value}}</a></th>
+        {% elif not key.startswith('_') %}
+        <th scope="col">{{value}}</th>
+        {% endif %}
+        {% endfor %}
+
+{#        {% if is_edit == 1 %}#}
+{#        <td>#}
+{#            <a href="{{url_for('edit_item', cat=table_title if not edit_table else edit_table, id=item[id_name])}}" class="btn btn-warning">Редактировать 📝</a>#}
+{#            <a href="{{url_for('delete_item', cat=table_title if not delete_table else delete_table, id=item[id_name])}}" class="btn btn-danger">❌</a>#}
+{#        </td>#}
+{#        {% endif %}#}
+    </tr>
+    </tbody>
+    {% endfor %}
+    </div>
+        </table>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="col">
+    <div class="row justify-content-center">
+        <h2>{{category_name}}</h2>
+    </div>
+        <table class="table table-bordered">
+    <div class="row">
+    <thead class="thead-dark">
+    <div class="col">
+        <nav class="navbar navbar-light bg-light">
+            <a href="/?cat=lists" class="btn btn-secondary">Назад к параметрам</a>
+            <a href="{{url_for('add_item', cat=table_title)}}?param_id={{ param_id }}" class="btn btn-secondary">Добавить ➕</a>
+        </nav>
+    </div>
+    <tr>
+        {% for key in head_names %}
+        <th scope="col">{{key}}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    {% for item in items %}
+    <tbody>
+    <tr>
+        {% for key, value in item.items() %}
+        <th scope="col">{{value}}</th>
+        {% endfor %}
+
+        <td>
+            <a href="{{url_for('edit_item', cat=table_title, id=item[id_name])}}" class="btn btn-warning">Редактировать 📝</a>
+            <a href="{{url_for('delete_item', cat='options', id=item[id_name])}}" class="btn btn-danger">❌</a>
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+    </div>
+        </table>
+</div>
+{% endblock %}

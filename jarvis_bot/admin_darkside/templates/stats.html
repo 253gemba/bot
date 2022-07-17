@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="col">
+    <div class="row justify-content-center">
+        <h2>{{category_name}}</h2>
+    </div>
+    <div class="col">
+            <a href="/?cat=all_cities&from_days=7" class="btn btn-secondary">Неделя</a>
+            <a href="/?cat=all_cities&from_days=30" class="btn btn-secondary">Месяц</a>
+            <a href="/?cat=all_cities&from_days=90" class="btn btn-secondary">3 месяца</a>
+            <a href="/?cat=all_cities" class="btn btn-secondary">Всё время</a>
+    </div>
+        <table class="table table-bordered">
+    <div class="row">
+    <thead class="thead-dark">
+    <tr>
+        {% for key in head_names %}
+        <th scope="col">{{key}}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    {% for item in items %}
+    <tbody>
+    <tr>
+        {% for key, value in item.items() %}
+        {% if key == 'm' %}
+        <th scope="col"><a href="/?cat=all_cities&city_area={{dict(item.items())['city_id']|string}}">{{value}}</a></th>
+        {% elif not key.startswith('_') %}
+        <th scope="col">{{value}}</th>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    </tbody>
+    {% endfor %}
+    </div>
+        </table>
+</div>
+{% endblock %}
