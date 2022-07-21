@@ -28,5 +28,5 @@ class Ads(SqlAlchemyBase):
 
     @hybrid_property
     def string_date(self):
-        print(self.date_close)
+
         return self.date_close

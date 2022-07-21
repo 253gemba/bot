@@ -15,7 +15,7 @@ from utils.steps.define_step import get_future_step
 
 @dp.message_handler(CommandStart(), state="*")
 async def process_start_command(message: types.Message, state: FSMContext):
-    print(message)
+
     user_id = message.from_user.id
     msgtext = str(message.text).split('/start')[1].strip()
     conn = mysql_connection()
@@ -29,7 +29,7 @@ async def process_start_command(message: types.Message, state: FSMContext):
         conn.commit()
     if msgtext:
         decode_msg = await decode_link(msgtext)
-        print(f'decode_msg: {decode_msg}')
+
         if not on_database:
             if 'utm' in decode_msg:
                 utm_id = decode_msg.split("_")[1]

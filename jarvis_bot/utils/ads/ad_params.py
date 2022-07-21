@@ -13,7 +13,7 @@ async def get_params_category(c, category_id):
 
 
 async def get_step(c, message, ad_id, now_param_id=0, is_find=0, page_id=0):
-    print(f'now_param_id: {now_param_id}')
+
     if now_param_id == 'brand':
         c.execute("select last_brand_id from ads where ad_id = %s", (ad_id,))
         last_brand_id = c.fetchone()[0]
@@ -28,7 +28,7 @@ async def get_step(c, message, ad_id, now_param_id=0, is_find=0, page_id=0):
                                 reply_markup=inline_kb)
     else:
         new_param_id, old_param_id = await define_step.get_last_and_future(c, ad_id, now_param_id)
-        print(f'old_param_idd: {old_param_id}')
+
         if new_param_id == 6:
             if is_find:
                 await message.edit_text(f"{await get_find_text(c, ad_id)}",

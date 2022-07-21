@@ -22,7 +22,7 @@ async def send_step_message(c, conn, message, ad_id, param_id, option_id=0, page
         await ad_params.get_step(c, message, ad_id, param_id, page_id=page_id)
     else:
         if option_id:
-            print(option_id, all_ad_param_options)
+
             if option_id in all_ad_param_options:
                 c.execute("delete from ad_options where option_id = %s and ad_id = %s", (option_id, ad_id))
             else:
@@ -33,7 +33,7 @@ async def send_step_message(c, conn, message, ad_id, param_id, option_id=0, page
             c.execute("select option_id from options where param_id = %s", (param_id,))
             all_param_options = [x[0] for x in c.fetchall()]
             for k in all_param_options:
-                print(k)
+
                 c.execute("select count(*) from ad_options where ad_id = %s and option_id = %s",
                           (ad_id, k))
                 if not c.fetchone()[0]:
@@ -41,7 +41,7 @@ async def send_step_message(c, conn, message, ad_id, param_id, option_id=0, page
                         c.execute("insert into ad_options (ad_id, option_id, param_id) "
                                   "values (%s, %s, %s)", (ad_id, k, param_id))
                 else:
-                    print(all_param_options, all_ad_param_options)
+
                     if set(all_param_options) == set(all_ad_param_options):
                         c.execute("delete from ad_options where option_id = %s and ad_id = %s",
                                   (k, ad_id))

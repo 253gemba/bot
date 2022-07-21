@@ -13,7 +13,7 @@ async def update_cities(c, conn):
                 city_population = row[5]
                 city_latitude = row[9]
                 city_longitude = row[10]
-                print(city_area, city_name, city_population, city_latitude, city_longitude)
+
                 c.execute("select count(*) from all_cities "
                           "where city_name = %s and city_area = %s",
                           (city_name, city_area))

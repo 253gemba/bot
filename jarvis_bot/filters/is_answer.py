@@ -15,5 +15,5 @@ class IsAnswer(Filter):
             result = 1
         else:
             result = 0
-        print(result)
+
         return result

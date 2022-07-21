@@ -26,7 +26,7 @@ async def inline_echo(msg: InlineQuery, state: FSMContext):
     state_data = await state.get_data()
     state_state = await state.get_state()
     inline_text = str(inline_text).strip()
-    print(inline_text)
+
     city_type = state_data['city_type']
     if state_state == SetCity.area.state:
         all_city_names = await check_city_by_name(c, inline_text, city_type)
@@ -37,7 +37,7 @@ async def inline_echo(msg: InlineQuery, state: FSMContext):
     in_list = []
     if len(inline_text) >= 0:
         for x in all_city_names[:50]:
-            print(x)
+
             try:
                 if state_state == SetCity.area.state:
                     city_id, city_name = x

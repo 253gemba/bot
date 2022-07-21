@@ -15,7 +15,6 @@ from wtforms import StringField, IntegerField, FileField, SelectField, widgets, 
 from wtforms.validators import DataRequired
 
 import config
-from admin_darkside.data.withdrawal import Withdrawal
 from data import db_session
 from data.__all_models import *
 from forms import UsersForm, PaymentsForm, UtmForm
@@ -113,8 +112,7 @@ def generate_forms(**kwargs):
                     old_dict = all_cities[item[1]]
                     old_dict.append([result.city_id, result.city_name])
                     all_cities[item[1]] = old_dict
-        print(all_cities)
-        print(all_areas)
+
         city_id = SelectField('Выберите город',
                               choices=all_cities,
                               coerce=str,
@@ -189,7 +187,6 @@ def generate_forms(**kwargs):
             all_options = []
             for x in session.query(ParamOptions).filter(ParamOptions.param_id == param_id).all():
                 all_options.append([x.option_id, x.option_name])
-            print(param_name, all_options, param_id, option_id)
             param_id = SelectField('Параметр',
                                    default=param_name,
                                    choices=[[param_id, param_name]])
@@ -374,7 +371,7 @@ def index():
                                     f"where category_id = {from_category} and parent_id is NULL")
             category_name = session.execute(f'select category_name '
                                             f'from categories where category_id = {from_category}').scalar_one()
-            print(items)
+
             category_name = f'Категория {category_name}. Бренды'
             back_id = session.execute(f'select parent_id '
                                       f'from categories where category_id = {from_category}').scalar_one()
@@ -388,7 +385,7 @@ def index():
                 category_name = session.execute(f'select category_name '
                                                 f'from categories where category_id = {set_category_id}').scalar_one()
                 key_name = 'brand_id'
-                print(items)
+
             if closes_setting == 1:
                 items = session.execute("select option_id, option_name, '-', '--' "
                                         "from options as m "
@@ -402,7 +399,7 @@ def index():
                                         f"where param_id = 15")
                 category_name = session.execute(f'select category_name '
                                                 f'from categories where category_id = {set_category_id}').scalar_one()
-                print(items)
+
                 key_name = 'option_id'
             if closes_setting == 3:
                 items = session.execute("select type_id, type_name, body_part, "
@@ -413,7 +410,7 @@ def index():
                 category_name = session.execute(f'select category_name '
                                                 f'from categories '
                                                 f'where category_id = {set_category_id}').scalar_one()
-                print(items)
+
                 key_name = 'type_id'
             if closes_setting == 4:
                 items = session.execute("select type_id, type_name, body_part, '-' "
@@ -422,7 +419,7 @@ def index():
                 category_name = session.execute(f'select category_name '
                                                 f'from categories '
                                                 f'where category_id = {set_category_id}').scalar_one()
-                print(items)
+
                 key_name = 'type_id'
             brand_name = ''
             category_name = f'Категория {category_name}'
@@ -596,7 +593,7 @@ def index():
     else:
         items = session.query(cats[cat][0]).all()
         items = [item.as_dict() for item in items]
-    print(items)
+
     if type(items) != list:
         d, a = {}, []
         for rowproxy in items:
@@ -604,7 +601,7 @@ def index():
                 d = {**d, **{column: value}}
             a.append(d)
         items = a
-    print(items)
+
     session.close()
     if cat == 'categories':
         if parent_id:
@@ -777,23 +774,23 @@ def add_item(cat):
     else:
         execute_cat = cat
     form = forms[execute_cat]()
-    print(form.data)
+
     if form.validate_on_submit():
         data = form.data
-        print(data)
+
         for k, v in data.items():
             if 'photos' in k:
-                print(41)
+
                 if v:
                     new_v = []
                     for q in v:
-                        print(q)
+
                         new_v.append(photo_upload(q))
                     data[k] = new_v
                 else:
                     data[k] = []
             elif 'photo' in k:
-                print(22)
+
                 if v:
                     data[k] = photo_upload(v)
                 else:
@@ -835,19 +832,19 @@ def edit_item(cat, id):
     elif form.validate_on_submit():
         item = session.query(cats[cat][0]).get(id)
         if item:
-            print(form.data)
+
             data = form.data
             del data['csrf_token']
             for k, v in data.items():
                 if 'photos' in k:
-                    print(request.args)
+
                     if v:
                         new_v = []
                         brand_id = session.execute(
                             f"select brand_id from brand_params where brand_param_id = {id}").scalar()
                         for q in v:
                             photo_link = photo_upload(q)
-                            print(photo_link)
+
                             session.execute(f"insert into brands_photos (brand_id, color_id, photo_link) "
                                             f"values ({brand_id}, {id}, '{str(photo_link)}')")
                             session.commit()
@@ -872,7 +869,7 @@ def edit_item(cat, id):
         else:
             session.close()
             abort(404)
-    print(cat)
+
     if cat == 'ads':
         photos = session.execute(f"select photo_id, photo_link "
                                  f"from ads_photos where ad_id = {id}")
@@ -880,7 +877,7 @@ def edit_item(cat, id):
         for row in photos:
             new_items.append(row._asdict())
         photos = new_items
-        print(photos)
+
         session.close()
         return render_template('ad_form.html', title=f'Редактирование {cats[cat][3]} № {id}', form=form,
                                form_title=f'Редактирование {cats[cat][3]} № {id}',
@@ -892,7 +889,7 @@ def edit_item(cat, id):
         for row in photos:
             new_items.append(row._asdict())
         photos = new_items
-        print(photos)
+
         session.close()
         return render_template('edit_ad_options.html', title=f'Редактирование {cats[cat][3]} № {id}', form=form,
                                form_title=f'Редактирование {cats[cat][3]} № {id}',
@@ -909,7 +906,7 @@ def delete_item(cat, id):
     if cat == 'ads_photos':
         session = db_session.create_session()
         item = session.query(cats[cat][0]).get(id)
-        print(item)
+
         if item:
             session.delete(item)
             session.commit()
@@ -921,7 +918,7 @@ def delete_item(cat, id):
     elif cat == 'brands_photos':
         session = db_session.create_session()
         item = session.query(cats[cat][0]).get(id)
-        print(item)
+
         if item:
             session.delete(item)
             session.commit()
@@ -938,7 +935,7 @@ def delete_item(cat, id):
             abort(404)
         session = db_session.create_session()
         user_id = session.execute(f"select user_id from ads where ad_id = {id}").scalar()
-        print(user_id)
+
         session.execute(f"update users set balance = balance + (select tariff_price from ads where ad_id = {id}) "
                         f"where user_id = {user_id}")
         session.commit()

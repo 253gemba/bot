@@ -67,7 +67,7 @@ async def get_find_text(c, object_id, count_ads=0):
         param_name = c.fetchone()[0]
         all_options_names = ", ".join(all_options_names)
         params_options_text.append(f'<b>{param_name}</b>: {all_options_names}')
-    print(params_options_text)
+
     params_options_text = "\n".join(params_options_text)
     # params_options_text = f'<b>ℹ Характеристики:</b>\n{params_options_text}' if params_options_text else ""
     c.execute("select city_id from users where user_id = %s", (user_id,))

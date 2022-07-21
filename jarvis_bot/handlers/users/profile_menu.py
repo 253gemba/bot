@@ -49,7 +49,8 @@ async def user_menu_header(message: types.Message, state: FSMContext):
                              f"├  <b>Доступно к выводу:</b> {withdraw_balance}₽\n"
                              f"├  <b>Лично приглашенных:</b> {referred}\n"
                              f"└  <b>Прикрепленная ссылка:</b> {attached}\n\n"
-                             f"<b>⤵️ Ваша ссылка:</b> \n {link}", reply_markup=withdrawal())
+                             f"<b>⤵️ Ваша ссылка⤵️</b> \n")
+        await message.answer(f'{link}', reply_markup=withdrawal())
 
     elif msg_text == default_buttons.button_attach_ref.text:
         await message.reply("<b>Введите реферальную ссылку</b>")

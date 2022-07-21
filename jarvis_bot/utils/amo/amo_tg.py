@@ -49,7 +49,7 @@ async def send_amo_deal(c, conn, deal_id, reply_to_message=None, is_edit=0):
                    f'<b>Ответственный:</b> {mark_underline(responsible_user, 0)}\n' \
                    f'<b>Телефон клиента:</b> {mark_underline(phone, edit_phone)}'
     city_id = await name_to_id(c, city)
-    print(city_id)
+
     if city_id:
         try:
             c.execute("select (select channel_id from dispatchers_list "

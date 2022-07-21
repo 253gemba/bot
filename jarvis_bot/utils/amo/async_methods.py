@@ -28,10 +28,10 @@ async def check_leads(c, conn, leads):
         add_hour = add_hour if str(add_hour).isdigit() else 0
         paid_for_km = lead.paid_for_km
         phone = None
-        print(lead.status)
+
         await asyncio.sleep(0)
         if lead.status.id == 34302931:
-            print(lead)
+
             for contact in contacts:
                 contact: Contact
                 contacts_by_id = Contact.objects.get(object_id=contact.id)
@@ -41,8 +41,7 @@ async def check_leads(c, conn, leads):
             add_service = [] if not add_service else add_service
             add_service = [x.value for x in add_service]
             add_service = "; ".join(add_service)
-            print(city, address, service, start_datetime, count_loaders, car_type, minimum, floor_rise,
-                  floor_descent, rigging, add_service, note, responsible_user, phone, area_price)
+
             if not c.fetchone()[0]:
                 await asyncio.sleep(0)
                 c.execute("insert into amo_deals (deal_id, city, address, service, start_datetime, count_loaders, "
@@ -93,9 +92,9 @@ async def check_leads(c, conn, leads):
 async def check_rejected(c, conn, leads_rejected):
     for lead in leads_rejected:
         deal_id = lead.id
-        print(lead.status)
+
         if lead.status.id in (34386043, 143):
-            print(lead)
+
             c.execute("select count(*) from amo_deals "
                       "where deal_id = %s and is_active = 1 and active_push = 1", (deal_id,))
             if c.fetchone()[0]:

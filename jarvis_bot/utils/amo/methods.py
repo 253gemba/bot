@@ -89,7 +89,7 @@ class AmoMethods():
         param: status_id: 34302931 - поиск исполнителей
         """
         order = Lead.objects.get(object_id=deal_id)
-        print(order)
+
         order.status = status_id
         order.save()
 

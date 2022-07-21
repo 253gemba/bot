@@ -65,8 +65,7 @@ async def create_ad_form(message: types.Message, state: FSMContext):
                 messages_to_delete_old = state_data.get('messages_to_delete')
                 if messages_to_delete_old:
                     [await bot.delete_message(user_id, i) for i in messages_to_delete_old]
-                print(message)
-                print(messages_to_delete_old)
+
                 c.execute("select count(*) from ads_photos where media_group_id = %s", (message.media_group_id,))
                 if not c.fetchone()[0] or not message.media_group_id:
                     c.execute("update ads_photos set media_group_id = %s "

@@ -40,13 +40,12 @@ async def send_new_post(c, conn, user_id, user_message: Message):
         db_config = read_db_config()
         conn = MySQLConnection(**db_config)
         c = conn.cursor(buffered=True)
-        print(f'post: {new_post_id}')
+
         c.execute("select chat_message_id from answers_posts "
                   "where post_id = %s", (new_post_id,))
         chat_message_id = c.fetchone()[0]
         c.execute("select * from answers_posts")
-        print(f'test: {c.fetchone()}')
-        print(f'chat_message_id: {chat_message_id}')
+
         if chat_message_id:
             await send_new_message(c, conn, new_post_id, user_message)
             c.close()

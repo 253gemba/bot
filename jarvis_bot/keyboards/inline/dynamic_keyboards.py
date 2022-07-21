@@ -302,7 +302,7 @@ async def get_ad_param_keyboard(c, ad_id=0, now_param_id=0, page=0, old_param_id
                                        callback_data=f'listAdParamOptions_{ad_id}_{now_param_id}_{page - 1}'),
                   InlineKeyboardButton(text=f'>>' if page + 1 < math.ceil(len(param_options) / offset) else '',
                                        callback_data=f'listAdParamOptions_{ad_id}_{now_param_id}_{page + 1}'))
-    print(f'old_param_id: {now_param_id}')
+
     if param_options[0][2] > 1:
         if old_param_id:
             back_query = f'backAdParam_{ad_id}_{old_param_id}'
@@ -334,7 +334,7 @@ async def edit_find_params(c, find_id, count_ads=0):
     all_find_params = []
     c.execute("select brand_id from find_brands where find_id = %s", (find_id,))
     for selected_brand in c.fetchall() + [(serial_id,), (brand_id,)]:
-        print(selected_brand)
+
         c.execute("select param_id, (select param_name from params where params.param_id = brand_params.param_id) "
                   "from brand_params where category_id = %s and brand_id = %s group by param_id",
                   (section_id, selected_brand[0]))
@@ -493,7 +493,7 @@ async def closes_types(c, object_id, is_find=0, is_type=1, page=0):
     category_id, closes_body_part, closes_type, brand_id = c.fetchone()
     if is_type:
         closes_type = None
-    print(category_id, closes_body_part)
+
     c.execute("select type_id, type_name from closes_types "
               "where category_id = %s and IF(%s, parent_id = %s, parent_id is NULL) and "
               "body_part = %s and is_type = %s",
@@ -535,7 +535,7 @@ async def clothes_brands(c, object_id, is_find=0, is_closes_part=0, select_brand
         c.execute("select category_id, section_id, brand_id, closes_body_part "
                   "from finds where find_id = %s", (object_id,))
     category_id, section_id, ad_brand_id, closes_body_part = c.fetchone()
-    print(section_id, ad_brand_id, is_closes_part)
+
     c.execute("select brand_id, brand_name from brands where category_id = %s and "
               "clothes_type = %s",
               (section_id, closes_body_part))
@@ -603,7 +603,7 @@ async def get_brands(c, object_id=None, is_find=0, parent_id=None, page=0, is_ed
         else:
             c.execute("select parent_id from brands where brand_id = %s", (parent_id,))
             brand_parent_id = c.fetchone()[0]
-            print(brand_parent_id)
+
             if not brand_parent_id:
                 back_query = f'createAdSelectCategory_{category_id}_{section_id}'
             else:
@@ -652,7 +652,7 @@ async def get_find_param_keyboard(c, param_id, find_id, page=0):
     # print(param_id, brand_id)
     c.execute("select brand_id from find_brands where find_id = %s", (find_id,))
     selected_brands = [x[0] for x in c.fetchall()] + [old_brand_id]
-    print(find_id, selected_brands)
+
     param_options = []
     for brand_id in selected_brands:
         c.execute(
@@ -662,7 +662,7 @@ async def get_find_param_keyboard(c, param_id, find_id, page=0):
             "where param_id = %s and brand_id = %s",
             (param_id, brand_id))
         param_options_brand = c.fetchall()
-        print(brand_id, param_id, param_options_brand)
+
         param_options += param_options_brand
     if section_id == 13:
         param_options = [(340, 'Lightning', 1), (361, '3,5', 1)]
@@ -674,10 +674,10 @@ async def get_find_param_keyboard(c, param_id, find_id, page=0):
     #         "where param_id = %s and brand_id = %s",
     #         (param_id, brand_id))
     #     param_options = c.fetchall()
-    print(param_options)
+
     c.execute("select option_id from find_options where find_id = %s and param_id = %s", (find_id, param_id))
     ad_options = [x[0] for x in c.fetchall()]
-    print(ad_options)
+
     offset = 12
     offset_param_options = param_options[page * offset:(page + 1) * offset]
     showed_options = []
@@ -695,7 +695,7 @@ async def get_find_param_keyboard(c, param_id, find_id, page=0):
             else:
                 inline_kb.row(button)
     all_param_options = [x[0] for x in offset_param_options]
-    print(set(all_param_options), set(ad_options))
+
     selected_all = set(all_param_options) == set(ad_options)
     c.execute("select param_type from params where param_id = %s", (param_id,))
     param_type = c.fetchone()[0]

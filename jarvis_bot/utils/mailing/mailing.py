@@ -109,16 +109,16 @@ async def go_mailing(mailing_id, users_list=None, cities=None):
               (mailing_id,))
     conn.commit()
     all_users = await get_users_list(c, cities=cities)
-    print(all_users)
+
     all_users = all_users[1]
-    print(all_users[0])
+
     count_lives = 0
     count_deaths = 0
     if users_list:
         all_users = users_list.split("\n")
-    print(all_users)
+
     for user_id in all_users:
-        print(user_id)
+
         is_active = await send_mailing(c, mailing_id, user_id)
         if not is_active:
             c.execute("update users set is_live = 0 where user_id = %s", (user_id,))

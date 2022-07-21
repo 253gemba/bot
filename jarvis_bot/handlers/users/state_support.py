@@ -14,7 +14,7 @@ from utils.default_tg.default import get_user_menu
 @dp.message_handler(content_types="any", state="*")
 async def test(message: types.Message, state: FSMContext):
     # CONNECT TO DATABASE
-    print(message)
+
     user_id = message.from_user.id
     db_config = read_db_config()
     conn = MySQLConnection(**db_config)

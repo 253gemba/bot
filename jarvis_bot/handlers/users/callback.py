@@ -150,7 +150,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
         else:
             c.execute("select last_brand_id from ads where ad_id = %s", (ad_id,))
             last_brand_id = c.fetchone()[0]
-            print(last_brand_id)
+
             c.execute("select param_id "
                       "from brand_params where brand_id = %s order by param_position",
                       (last_brand_id,))
@@ -431,7 +431,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
         db_brand_id = c.fetchone()[0]
         c.execute("select count(*) from brands where parent_id = %s and is_serial = 1", (db_brand_id,))
         is_have_serial = c.fetchone()[0]
-        print(is_have_serial, now_is_serial, now_is_model)
+
         if is_have_serial and (not now_is_serial and not now_is_model):
             if now_is_model or now_is_serial:
                 inline_kb = await dynamic_keyboards.multiple_brands(c, find_id, parent_id=brand_id)
@@ -738,7 +738,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
                     new_param_id = 3
                 else:
                     new_param_id, old_param_id = await define_step.get_last_and_future(c, ad_id, old_param_id)
-                print(new_param_id, old_param_id)
+
                 inline_kb = await dynamic_keyboards.get_ad_param_keyboard(c, ad_id, new_param_id)
                 c.execute("select question_text from params where param_id = %s", (new_param_id,))
                 question_text = c.fetchone()[0]
@@ -999,7 +999,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
                                     reply_markup=await dynamic_keyboards.edit_find_params(c, find_id,
                                                                                           count_ads=len(all_ads)))
         else:
-            print(option_id, all_param_options)
+
             if option_id:
                 if option_id in all_find_param_options:
                     c.execute("delete from find_options where option_id = %s and find_id = %s", (option_id, find_id))
@@ -1008,7 +1008,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
                               "values (%s, %s, %s)", (find_id, option_id, param_id))
             else:
                 for k in all_param_options:
-                    print(k)
+
                     c.execute("select count(*) from find_options where find_id = %s and option_id = %s",
                               (find_id, k))
                     if not c.fetchone()[0]:
@@ -1068,7 +1068,7 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
         if one_param:
             money_value = int(one_param)
             pay_link = await create_payment(payment_value=money_value, user_id=user_id)
-            print(pay_link)
+
             c.execute("insert into payments (user_id, payment_amount, system_id) values (%s, %s, %s)",
                       (user_id, money_value, pay_link['id']))
             conn.commit()

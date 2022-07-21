@@ -76,14 +76,14 @@ async def get_ad_photos(c, ad_id):
     if not all_photos_links:
         c.execute("select IF(model_id, model_id, serial_id) from ads where ad_id = %s", (ad_id,))
         brand_id = c.fetchone()[0]
-        print(brand_id)
+
         c.execute("select option_id from ad_options where ad_id = %s", (ad_id,))
         for option_id in [x[0] for x in c.fetchall()]:
-            print(f'option_id: {option_id}')
+
             c.execute("select brand_param_id "
                       "from brand_params where brand_id = %s and option_id = %s", (brand_id, option_id))
             for brand_param_id in [x[0] for x in c.fetchall()]:
-                print(f'brand_param_id: {brand_param_id}')
+
                 c.execute("select photo_link from brands_photos where brand_id = %s and color_id = %s",
                           (brand_id, brand_param_id))
                 all_photos_links = [x[0] for x in c.fetchall()]

@@ -74,10 +74,10 @@ async def add_money(message: types.Message, state: FSMContext):
         for one_model in msg_text.split("\n"):
             one_model = one_model.strip()
             param_params = one_model.split('  ')
-            print(param_params)
+
             model_name = param_params[0].strip()
             model_params = param_params[1:]
-            print(brand_id, model_name)
+
             c.execute("select count(*) from brands where brand_name = %s and parent_id = %s", (model_name, brand_id))
             if not c.fetchone()[0]:
                 c.execute("insert into brands (brand_name, parent_id) values (%s, %s)",
@@ -95,7 +95,7 @@ async def add_money(message: types.Message, state: FSMContext):
                     c.execute("select count(*) from brand_params "
                               "where param_id = %s and option_id = %s and brand_id = %s",
                               (param_id, option_id, model_id))
-                    print(category_id, model_id, param_id, option_id)
+
                     # assert 1 == 0
                     if not c.fetchone()[0]:
                         c.execute("insert into brand_params (category_id, brand_id, param_id, "

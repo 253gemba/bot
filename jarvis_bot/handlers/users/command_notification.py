@@ -10,7 +10,7 @@ from utils.db_api.python_mysql import mysql_connection
 
 @dp.message_handler(IsManager(), commands=['notification'], state="*")
 async def process_start_command(message: types.Message, state: FSMContext):
-    print(message)
+
     user_id = message.from_user.id
     msg_text = str(message.text)
     conn = mysql_connection()

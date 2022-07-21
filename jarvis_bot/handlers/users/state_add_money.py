@@ -21,7 +21,7 @@ async def add_money(message: types.Message, state: FSMContext):
     logging.info(f'{user_id} {msg_text}')
     if msg_text.isdigit():
         pay_link = await create_payment(payment_value=msg_text, user_id=user_id)
-        print(pay_link)
+
         c.execute("insert into payments (user_id, payment_amount, system_id) values (%s, %s, %s)",
                   (user_id, msg_text, pay_link['id']))
         conn.commit()

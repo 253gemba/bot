@@ -24,5 +24,5 @@ class Payments(SqlAlchemyBase):
 
     @hybrid_property
     def string_start_date(self):
-        print(self.payment_date)
+
         return self.payment_date

@@ -35,7 +35,7 @@ async def admin_menu(message: types.Message, state: FSMContext):
     elif msg_text == default_buttons.button_personnel.text:
         await bot.send_message(user_id,
                                f'Выберите раздел ⤵',
-                               reply_markup=default_keyboards.personnel_menu)
+                               reply_markup=default_keyboards.admin_menu)
     elif msg_text == default_buttons.button_analytics.text:
         await bot.send_message(user_id,
                                f'Выберите раздел ⤵',

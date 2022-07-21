@@ -40,7 +40,7 @@ async def send_new_message(c, conn, post_id, user_message: Message, is_manager=0
                                                      reply_to_message_id=client_message_id)
     if translate_text:
         try:
-            print(message_to_chat)
+
             translate_to_chat = await bot.send_message(chat_id if not is_manager else client_id,
                                                        f"{translate_text}",
                                                        reply_to_message_id=message_to_chat.message_id,

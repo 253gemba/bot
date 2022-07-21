@@ -118,7 +118,7 @@ async def get_future_step_by_param(c, object_id, now_param_id, now_add_info='0')
         # c.execute("select param_id from param_options where option_id = %s", (now_option_id,))
         # param_id = c.fetchone()[0]
         param_id = now_param_id
-        print(f'section_id: {section_id}; Param_id: {param_id}; {now_option_id}')
+
         c.execute("select param_id, is_tariff_step from category_params "
                   "where category_id = %s and param_id > %s and "
                   "(select count(*) from param_options "
@@ -131,7 +131,7 @@ async def get_future_step_by_param(c, object_id, now_param_id, now_add_info='0')
             next_param_id, is_tariff_step = 0, 0
         # next_param_id = 0 if not next_param_id else next_param_id[0]
         next_add_info = 'tariff' if is_tariff_step else '0'
-        print(f'next_param_id: {next_param_id}; next_add_info: {next_add_info}')
+
         return next_param_id, next_add_info
 
 
@@ -150,13 +150,13 @@ async def get_future_step(c, object_id, object_type='ad', now_step_id=None, now_
         if not now_add_info.isdigit():
             return now_param_id, '0'
         else:
-            print(f'now_step_id: {now_step_id, now_option_id}')
+
             c.execute("select section_id from ads where ad_id = %s", (object_id,))
             section_id = c.fetchone()[0]
             # c.execute("select param_id from param_options where option_id = %s", (now_option_id,))
             # param_id = c.fetchone()[0]
             param_id = now_param_id
-            print(f'section_id: {section_id}; Param_id: {param_id}; {now_option_id}')
+
             c.execute("select param_id, is_tariff_step from category_params "
                       "where category_id = %s and param_id > %s and "
                       "(select count(*) from param_options "
@@ -168,6 +168,6 @@ async def get_future_step(c, object_id, object_type='ad', now_step_id=None, now_
             except:
                 next_param_id, is_tariff_step = 0, 0
             # next_param_id = 0 if not next_param_id else next_param_id[0]
-            print(f'next_param_id: {next_param_id}')
+
             next_add_info = 'tariff' if is_tariff_step else '0'
             return next_param_id, next_add_info
