@@ -28,7 +28,7 @@ async def process_start_command(message: types.Message, state: FSMContext):
                   (user_id, message.from_user.first_name, message.from_user.last_name, message.from_user.username))
         conn.commit()
     if msgtext:
-        decode_msg = await decode_link(msgtext)
+        decode_msg = await decode_link(msgtext.encode('unicode-escape'))
 
         if not on_database:
             if 'utm' in decode_msg:

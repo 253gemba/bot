@@ -15,7 +15,7 @@ Configuration.secret_key = config.YOOKASSA_SECRET_KEY
 
 
 async def create_payment(payment_value='100.00', description="Пополнение баланса", user_id=0):
-    print(Configuration.account_id)
+
     body = {
         "amount": {
             "value": round((float(payment_value) * 1.04), 2),

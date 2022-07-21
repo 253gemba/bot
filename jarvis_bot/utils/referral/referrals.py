@@ -68,3 +68,16 @@ def is_valid(link):
     else:
         return True
 
+
+def is_same(user, link):
+    conn = mysql_connection()
+    c = conn.cursor()
+    c.execute('select user from referrals where referral = %s', (link,))
+    res = c.fetchone()[0]
+    conn.close()
+    if user == res:
+        return True
+    else:
+        return False
+
+
