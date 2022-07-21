@@ -1,0 +1,8 @@
+*.idea
+venv
+*.env
+/admin_darkside/data/config.py
+/data/config.py
+*Dump
+*docker
+/mysql_config.ini
