@@ -40,8 +40,9 @@ back_reset_menu.row(button_back, button_reset_ad)
 my_profile_menu = ReplyKeyboardMarkup(resize_keyboard=True)
 my_profile_menu.row(button_my_balance, button_change_city)
 my_profile_menu.row(button_my_ads, button_notifications)
-my_profile_menu.row(button_favourites)
+my_profile_menu.row(button_referral, button_attach_ref, button_favourites)
 my_profile_menu.row(button_close_profile)
+
 
 # go to head menu
 go_to_head_menu = ReplyKeyboardMarkup(resize_keyboard=True)

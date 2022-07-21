@@ -4,10 +4,14 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from filters.filters import IsManager
+from handlers.users.state_get_referral import process_message
 from keyboards.default import default_keyboards, default_buttons
 from keyboards.inline import dynamic_keyboards
+from keyboards.inline.dynamic_keyboards import withdrawal
 from loader import dp, bot
+from states.states import GetReferral
 from utils.ads import ad_info, find_info
+from utils.referral import referrals
 from utils.ads.ad_info import show_ads
 from utils.db_api.python_mysql import mysql_connection
 from utils.find.make_find import find_results
@@ -26,7 +30,32 @@ async def user_menu_header(message: types.Message, state: FSMContext):
     state_data = await state.get_data()
     state_state = await state.get_state()
     await state.finish()
-    if msg_text == default_buttons.button_my_balance.text:
+
+    if msg_text == default_buttons.button_referral.text:
+        c.execute('select bonus_balance, referral, referred from referrals where user = %s', (user_id, ))
+        try:
+            balance, link, referred = c.fetchone()
+        except TypeError:
+            referrals.create_referral(user_id, c, conn)
+        c.execute('select bonus_balance, referral, referred, attached_referrals '
+                  'from referrals where user = %s', (user_id,))
+        balance, link, referred, attached = c.fetchone()
+        withdraw_balance = 0
+        if balance > 250:
+            withdraw_balance = balance
+        await message.answer(f"🤝 <b>Партнерская программа</b>\n\n"
+                             f"🥇 <b>Статистика</b>:\n"
+                             f"├  <b>Всего заработано:</b> {balance}₽\n"
+                             f"├  <b>Доступно к выводу:</b> {withdraw_balance}₽\n"
+                             f"├  <b>Лично приглашенных:</b> {referred}\n"
+                             f"└  <b>Прикрепленная ссылка:</b> {attached}\n\n"
+                             f"<b>⤵️ Ваша ссылка:</b> \n {link}", reply_markup=withdrawal())
+
+    elif msg_text == default_buttons.button_attach_ref.text:
+        await message.reply("<b>Введите реферальную ссылку</b>")
+        await GetReferral.answer.set()
+
+    elif msg_text == default_buttons.button_my_balance.text:
         c.execute("select balance from users where user_id = %s", (user_id,))
         balance = c.fetchone()[0]
         await bot.send_message(user_id,

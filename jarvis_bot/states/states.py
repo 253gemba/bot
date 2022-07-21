@@ -38,5 +38,10 @@ class SetCity(StatesGroup):
     city = State()
 
 
-class MakeWithdraw(StatesGroup):
+class GetReferral(StatesGroup):
+    answer = State()
+
+
+class GetCreditCard(StatesGroup):
+    card = State()
     amount = State()

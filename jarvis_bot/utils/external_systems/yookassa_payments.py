@@ -8,6 +8,7 @@ from yookassa import Payment, Configuration
 from data import config
 from loader import bot
 from utils.default_tg.default import get_user_menu, get_bot_username
+from utils.referral.referrals import check_referral, update_referral_bonus
 
 Configuration.account_id = config.YOOKASSA_SHOP_ID
 Configuration.secret_key = config.YOOKASSA_SECRET_KEY
@@ -55,6 +56,8 @@ async def update_payments(c, conn, payment_id=0):
         if payment_info:
             new_status = payment_info['status']
             if new_status == 'succeeded':
+                if check_referral(user_id):
+                    update_referral_bonus(user_id, payment_amount)
                 c.execute("update payments set payment_status = 'succeeded' "
                           "where payment_id = %s", (payment_id,))
                 conn.commit()

@@ -15,6 +15,7 @@ from wtforms import StringField, IntegerField, FileField, SelectField, widgets, 
 from wtforms.validators import DataRequired
 
 import config
+from admin_darkside.data.withdrawal import Withdrawal
 from data import db_session
 from data.__all_models import *
 from forms import UsersForm, PaymentsForm, UtmForm
@@ -23,11 +24,11 @@ bot = Bot(token="1728753183:AAGDN3BDkSa7g2BU7Zu5LDN7bcZM69MahEA", parse_mode=typ
 
 UPLOAD_FOLDER = 'static/img'
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret'
+app.config['SECRET_KEY'] = 'secretkey'
 auth = HTTPBasicAuth()
 
 users = {
-    "elephant": generate_password_hash("fish832")
+    "grunt_180": generate_password_hash("hh45Bm12fG")
 }
 
 cats = {
@@ -70,6 +71,8 @@ cats = {
               ["ID", "Название", "Тип", "Вопрос", "Управление"]],
     'closes_types': [ClosesTypes, 'type_id', 'Название', 'Часть тела',
               ["ID", 'Название', 'Часть тела', 'Вид одежды', 'Управление']],
+    'withdrawal': [Withdrawal, 'id', ['ID Телеграм', 'Пользователь', 'Номер карты', 'Сумма',
+                                      'Дата создания', 'Управление']]
 }
 
 
@@ -79,6 +82,13 @@ def generate_forms(**kwargs):
     class MultiCheckboxField(SelectMultipleField):
         widget = widgets.ListWidget(prefix_label=False)
         option_widget = widgets.CheckboxInput()
+
+    class WithdrawalsForm(FlaskForm):
+        id = TextAreaField('Идентификатор записи')
+        tg_user = TextAreaField('Пользователь телеграм')
+        card_num = IntegerField('Номер банковской карты')
+        created_date = DateTimeField(label='Время создания', format='%d.%m.%Y %H:%M',
+                                     default=datetime.utcnow() + timedelta(hours=3))
 
     class MailingForm(FlaskForm):
         mail_datetime = DateTimeField(label='Дата и время рассылки', format='%d.%m.%Y %H:%M',
@@ -208,6 +218,7 @@ def generate_forms(**kwargs):
         'lists': ParamsForm,
         'options': OptionsForm,
         'brand_params': BrandParamsForm,
+        'withdrawal': WithdrawalsForm
     }
     session.close()
     return forms
@@ -264,6 +275,15 @@ def index():
         for row in items:
             new_items.append(row._asdict())
         items = new_items
+
+    elif cat == 'withdrawal':
+        items = session.execute("select id, user_id, card_num, amount, created_date from withdrawal")
+        items: CursorResult
+        new_items = []
+        for item in items:
+            new_items.append(item._asdict())
+        items = new_items
+        category_name = f'Вывод средств'
     elif cat == 'stats':
         items = session.execute("select city_id, (select count(*) from users "
                                 "where users.city_id = all_cities.city_id) as k, city_name, "
@@ -727,6 +747,13 @@ def index():
                                    id_name=cats[cat][1],
                                    category_name=category_name,
                                    head_names=cats[cat][4])
+    elif cat == 'withdrawal':
+        return render_template('withdrawal.html',title='Выводы', table_title=cat,
+                               items=items,
+                               category_name=category_name,
+                               id_name=cats[cat][1],
+                               head_names=cats[cat][2]
+                               )
     else:
         return render_template('index.html', title="Главная", table_title=cat,
                                items=items,

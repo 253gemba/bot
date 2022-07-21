@@ -5,11 +5,13 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import InlineKeyboardButton, InputMedia, MediaGroup
 
+from utils.withdrawal.withdrawal import get_amount
+from . import state_get_card_info
 from data import config
 from keyboards.default import default_keyboards, default_buttons
 from keyboards.inline import dynamic_keyboards
 from loader import dp, bot
-from states.states import CreateAd, AddMoney, SetCity, CreateFind, AddInformation
+from states.states import CreateAd, AddMoney, SetCity, CreateFind, AddInformation, GetCreditCard
 from utils.ads import ad_info, ad_params, find_info
 from utils.ads.ad_info import show_ads
 from utils.ads.find_info import get_find_text
@@ -19,6 +21,7 @@ from utils.default_tg.default import get_user_menu
 from utils.external_systems.yookassa_payments import create_payment
 from utils.find.make_find import find_results
 from utils.steps import define_step, step_messages
+from utils.referral.referrals import *
 
 
 @dp.callback_query_handler(state="*")
@@ -59,7 +62,16 @@ async def process_callback_messages(callback_query: types.CallbackQuery, state: 
         four_param = query_data.split('_')[4]
     except:
         four_param = None
-    if 'hide' == start_data:
+    if 'withdraw' == start_data:
+        await state.finish()
+        available = get_amount(user_id)
+        if available < 250:
+            await message.answer(f'<b>Недостаточно средств на балансе партнерской программы.'
+                                 f' Минимальная сумма - 250 рублей, доступно: {available} рублей</b>')
+        else:
+            await message.answer('<b>Введите номер карты, формат: XXXX XXXX XXXX XXXX</b>')
+            await GetCreditCard.card.set()
+    elif 'hide' == start_data:
         await state.finish()
         await bot.delete_message(user_id, message_id)
         if one_param:

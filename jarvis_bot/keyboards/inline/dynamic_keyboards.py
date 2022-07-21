@@ -7,6 +7,12 @@ from data import config
 from loader import bot
 
 
+def withdrawal():
+    inline_kb = InlineKeyboardMarkup()
+    inline_kb.insert(InlineKeyboardButton(text='Вывести деньги', callback_data='withdraw'))
+    return inline_kb
+
+
 def delete_object(query, reject_query='hide'):
     inline_kb = InlineKeyboardMarkup(row_width=2)
     inline_kb.insert(InlineKeyboardButton(text=f'Удалить',
@@ -219,6 +225,7 @@ async def brands_for_admin(c, parent_id=None):
 async def deposit_money():
     inline_kb = InlineKeyboardMarkup(row_width=2)
     all_prices = [20, 40, 60, 80, 100]
+    referral = ''
     for one_price in all_prices:
         inline_kb.insert(InlineKeyboardButton(text=f'{one_price}',
                                               callback_data=f'depositMoney_{one_price}'))
