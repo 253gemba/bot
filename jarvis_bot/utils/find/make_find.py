@@ -33,15 +33,14 @@ async def find_results(c, find_id, start_datetime=(datetime.datetime.now() - dat
     find_brands = c.fetchall()
     find_brands = [x[0] for x in find_brands]
     find_brands.append(main_find_brand_id)
-    print(section_id, finish_price, start_price, start_datetime, city_id)
-    print(find_brands)
+
     c.execute("select ad_id, brand_id, serial_id, model_id, main_brand_id from ads "
               "where section_id = %s and ad_price <= %s and "
               "ad_price >= %s and is_paid = 1 and date_create > %s and city_id = %s "
               "and date_close > NOW()",
               (section_id, finish_price, start_price, start_datetime, city_id))
     all_ads = c.fetchall()
-    print(all_ads)
+
     filtered_ads = []
     for ad_id, brand_id, serial_id, model_id, main_brand_id in all_ads:
         c.execute("select param_id, option_id from ad_options where ad_id = %s", (ad_id,))
