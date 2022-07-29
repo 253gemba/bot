@@ -16,3 +16,4 @@ from .params import *
 from .closes_types import *
 from .referrals import *
 from .withdrawal import *
+from .partnership import *

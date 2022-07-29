@@ -12,6 +12,7 @@ from loader import dp, bot
 from states.states import GetReferral
 from utils.ads import ad_info, find_info
 from utils.referral import referrals
+from utils.partnership import partnership
 from utils.ads.ad_info import show_ads
 from utils.db_api.python_mysql import mysql_connection
 from utils.find.make_find import find_results
@@ -32,25 +33,28 @@ async def user_menu_header(message: types.Message, state: FSMContext):
     await state.finish()
 
     if msg_text == default_buttons.button_referral.text:
-        c.execute('select bonus_balance, referral, referred from referrals where user = %s', (user_id, ))
-        try:
-            balance, link, referred = c.fetchone()
-        except TypeError:
-            referrals.create_referral(user_id, c, conn)
-        c.execute('select bonus_balance, referral, referred, attached_referrals '
-                  'from referrals where user = %s', (user_id,))
-        balance, link, referred, attached = c.fetchone()
-        withdraw_balance = 0
-        if balance > 250:
-            withdraw_balance = balance
-        await message.answer(f"🤝 <b>Партнерская программа</b>\n\n"
-                             f"🥇 <b>Статистика</b>:\n"
-                             f"├  <b>Всего заработано:</b> {balance}₽\n"
-                             f"├  <b>Доступно к выводу:</b> {withdraw_balance}₽\n"
-                             f"├  <b>Лично приглашенных:</b> {referred}\n"
-                             f"└  <b>Прикрепленная ссылка:</b> {attached}\n\n"
-                             f"<b>⤵️ Ваша ссылка⤵️</b> \n")
-        await message.answer(f'{link}', reply_markup=withdrawal())
+        if partnership.is_exist(user_id):
+            c.execute('select bonus_balance, referral, referred from referrals where user = %s', (user_id, ))
+            try:
+                balance, link, referred = c.fetchone()
+            except TypeError:
+                referrals.create_referral(user_id, c, conn)
+            c.execute('select bonus_balance, referral, referred, attached_referrals '
+                      'from referrals where user = %s', (user_id,))
+            balance, link, referred, attached = c.fetchone()
+            withdraw_balance = 0
+            if balance > 250:
+                withdraw_balance = balance
+            await message.answer(f"🤝 <b>Партнерская программа</b>\n\n"
+                                 f"🥇 <b>Статистика</b>:\n"
+                                 f"├  <b>Всего заработано:</b> {balance}₽\n"
+                                 f"├  <b>Доступно к выводу:</b> {withdraw_balance}₽\n"
+                                 f"├  <b>Лично приглашенных:</b> {referred}\n"
+                                 f"└  <b>Прикрепленная ссылка:</b> {attached}\n\n"
+                                 f"<b>⤵️ Ваша ссылка⤵️</b> \n")
+            await message.answer(f'{link}', reply_markup=withdrawal())
+        else:
+            await message.answer('К сожалению, у вас нет доступа к партнерской программе 😢')
 
     elif msg_text == default_buttons.button_attach_ref.text:
         await message.reply("<b>Введите реферальную ссылку</b>")
