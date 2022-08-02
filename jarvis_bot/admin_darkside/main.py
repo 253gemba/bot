@@ -85,7 +85,6 @@ def generate_forms(**kwargs):
         option_widget = widgets.CheckboxInput()
 
     class PartnershipForm(FlaskForm):
-        id = TextAreaField('Идентификатор записи')
         user_id = TextAreaField('Пользователь телеграм')
         created_date = DateTimeField(label='Время создания', format='%d.%m.%Y %H:%M',
                                      default=datetime.utcnow() + timedelta(hours=3))
@@ -774,7 +773,8 @@ def index():
                                items=items,
                                category_name=category_name,
                                id_name=cats[cat][1],
-                               head_names=cats[cat][4]
+                               head_names=cats[cat][4],
+                               is_add=1 if cat not in ('users', 'payments') else 0
                                )
 
     else:
