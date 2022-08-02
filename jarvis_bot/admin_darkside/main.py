@@ -71,7 +71,9 @@ cats = {
     'closes_types': [ClosesTypes, 'type_id', 'Название', 'Часть тела',
               ["ID", 'Название', 'Часть тела', 'Вид одежды', 'Управление']],
     'withdrawal': [Withdrawal, 'id', ['ID Телеграм', 'Пользователь', 'Номер карты', 'Сумма',
-                                      'Дата создания', 'Управление']]
+                                      'Дата создания', 'Управление']],
+    'partnership': [PartnershipUsers, 'id', 'ID пользователя', 'пользователя',
+                    ['ID записи', 'ID Телеграм', 'Дата создания', 'Управление']],
 }
 
 
@@ -81,6 +83,12 @@ def generate_forms(**kwargs):
     class MultiCheckboxField(SelectMultipleField):
         widget = widgets.ListWidget(prefix_label=False)
         option_widget = widgets.CheckboxInput()
+
+    class PartnershipForm(FlaskForm):
+        id = TextAreaField('Идентификатор записи')
+        user_id = TextAreaField('Пользователь телеграм')
+        created_date = DateTimeField(label='Время создания', format='%d.%m.%Y %H:%M',
+                                     default=datetime.utcnow() + timedelta(hours=3))
 
     class WithdrawalsForm(FlaskForm):
         id = TextAreaField('Идентификатор записи')
@@ -215,7 +223,8 @@ def generate_forms(**kwargs):
         'lists': ParamsForm,
         'options': OptionsForm,
         'brand_params': BrandParamsForm,
-        'withdrawal': WithdrawalsForm
+        'withdrawal': WithdrawalsForm,
+        'partnership': PartnershipForm
     }
     session.close()
     return forms
@@ -272,6 +281,15 @@ def index():
         for row in items:
             new_items.append(row._asdict())
         items = new_items
+
+    elif cat == 'partnership':
+        items = session.execute("select id, user_id, created_date from partnership")
+        items: CursorResult
+        new_items = []
+        for item in items:
+            new_items.append(item._asdict())
+        items = new_items
+        category_name = f'Доступ к партнерке'
 
     elif cat == 'withdrawal':
         items = session.execute("select id, user_id, card_num, amount, created_date from withdrawal")
@@ -745,12 +763,20 @@ def index():
                                    category_name=category_name,
                                    head_names=cats[cat][4])
     elif cat == 'withdrawal':
-        return render_template('withdrawal.html',title='Выводы', table_title=cat,
+        return render_template('withdrawal.html', title='Выводы', table_title=cat,
                                items=items,
                                category_name=category_name,
                                id_name=cats[cat][1],
                                head_names=cats[cat][2]
                                )
+    elif cat == 'partnership':
+        return render_template('partners.html', title='Доступ к партнерке', table_title=cat,
+                               items=items,
+                               category_name=category_name,
+                               id_name=cats[cat][1],
+                               head_names=cats[cat][4]
+                               )
+
     else:
         return render_template('index.html', title="Главная", table_title=cat,
                                items=items,

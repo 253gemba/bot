@@ -40,7 +40,7 @@ def update_referral_bonus(current_user, payment_sum):
     con = mysql_connection()
     cur = con.cursor()
     referral = get_referral(current_user)[0]
-    bonus = round(payment_sum * 0.4, 2)
+    bonus = round(payment_sum * 0.5, 2)
     user_id = fetch_user_referral(referral)[0]
     cur.execute('update referrals set bonus_balance = bonus_balance + %s where user = %s', (bonus, user_id))
     con.commit()
