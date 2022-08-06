@@ -49,16 +49,11 @@ async def user_menu_header(message: types.Message, state: FSMContext):
                                  f"🥇 <b>Статистика</b>:\n"
                                  f"├  <b>Всего заработано:</b> {balance}₽\n"
                                  f"├  <b>Доступно к выводу:</b> {withdraw_balance}₽\n"
-                                 f"├  <b>Лично приглашенных:</b> {referred}\n"
-                                 f"└  <b>Прикрепленная ссылка:</b> {attached}\n\n"
-                                 f"<b>⤵️ Ваша ссылка⤵️</b> \n")
-            await message.answer(f'{link}', reply_markup=withdrawal())
+                                 f"└  <b>Лично приглашенных:</b> {referred}\n"
+                                 f"<b>⤵️ Ваша ссылка⤵️</b> \n"
+                                 f'https://t.me/Jarvisrus_bot?start={link}', reply_markup=withdrawal())
         else:
             await message.answer('К сожалению, у вас нет доступа к партнерской программе 😢')
-
-    elif msg_text == default_buttons.button_attach_ref.text:
-        await message.reply("<b>Введите реферальную ссылку</b>")
-        await GetReferral.answer.set()
 
     elif msg_text == default_buttons.button_my_balance.text:
         c.execute("select balance from users where user_id = %s", (user_id,))

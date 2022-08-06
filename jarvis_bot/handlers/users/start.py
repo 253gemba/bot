@@ -10,6 +10,7 @@ from keyboards.default import default_buttons
 from loader import dp, bot
 from utils.db_api.python_mysql import mysql_connection
 from utils.default_tg.default import get_user_menu, decode_link
+from utils.referral.referrals import is_valid, is_same, attach_referral
 from utils.steps.define_step import get_future_step
 
 
@@ -28,16 +29,24 @@ async def process_start_command(message: types.Message, state: FSMContext):
                   (user_id, message.from_user.first_name, message.from_user.last_name, message.from_user.username))
         conn.commit()
     if msgtext:
-        decode_msg = await decode_link(msgtext.encode('unicode-escape'))
-
-        if not on_database:
-            if 'utm' in decode_msg:
-                utm_id = decode_msg.split("_")[1]
-                c.execute("select bonus from utm where utm_id = %s", (utm_id,))
-                bonus = c.fetchone()[0]
-                c.execute("update users set utm_id = %s, bonus_value = %s where user_id = %s",
-                          (utm_id, bonus, user_id))
-                conn.commit()
+        flag = is_valid(msgtext)
+        if flag:
+            same_flag = is_same(user_id, msgtext)
+            if not same_flag:
+                attach_referral(user_id, msgtext)
+                await message.answer(f'Вы перешли по реферальной ссылке. Приятного времени суток! :)')
+            else:
+                await message.answer(f'Свою ссылку прикрепить нельзя ;)')
+        # decode_msg = await decode_link(msgtext.encode('unicode-escape'))
+        #
+        # if not on_database:
+        #     if 'utm' in decode_msg:
+        #         utm_id = decode_msg.split("_")[1]
+        #         c.execute("select bonus from utm where utm_id = %s", (utm_id,))
+        #         bonus = c.fetchone()[0]
+        #         c.execute("update users set utm_id = %s, bonus_value = %s where user_id = %s",
+        #                   (utm_id, bonus, user_id))
+        #         conn.commit()
     if user_id not in ADMINS:
         await bot.send_message(user_id,
                                f'👋 <b>Приветствую!</b>\n\n'

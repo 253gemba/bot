@@ -31,9 +31,12 @@ def fetch_user_referral(link):
     return user_id
 
 
-def attach_referral(c, conn, user, referral):
+def attach_referral(user, referral):
+    conn = mysql_connection()
+    c = conn.cursor()
     c.execute('update referrals set attached_referrals = %s where user = %s', (referral, user))
     conn.commit()
+    conn.close()
 
 
 def update_referral_bonus(current_user, payment_sum):

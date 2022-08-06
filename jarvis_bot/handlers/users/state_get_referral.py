@@ -20,7 +20,7 @@ async def process_message(message: types.Message, state: FSMContext):
         if flag:
             user_flag = is_same(current_user, referral_link)
             if not user_flag:
-                attach_referral(c, conn, current_user, referral_link)
+                attach_referral(current_user, referral_link)
                 await message.answer(f'Ссылка {referral_link} прикреплена')
             else:
                 await message.answer(f'Свою ссылку прикрепить нельзя ;)')
