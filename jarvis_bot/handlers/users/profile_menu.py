@@ -16,6 +16,7 @@ from utils.partnership import partnership
 from utils.ads.ad_info import show_ads
 from utils.db_api.python_mysql import mysql_connection
 from utils.find.make_find import find_results
+from utils.referral.referrals import update_referred
 
 
 @dp.message_handler(IsManager(),
@@ -39,9 +40,10 @@ async def user_menu_header(message: types.Message, state: FSMContext):
                 balance, link, referred = c.fetchone()
             except TypeError:
                 referrals.create_referral(user_id, c, conn)
-            c.execute('select bonus_balance, referral, referred, attached_referrals '
+            c.execute('select bonus_balance, referral, attached_referrals '
                       'from referrals where user = %s', (user_id,))
-            balance, link, referred, attached = c.fetchone()
+            balance, link, attached = c.fetchone()
+            referred = update_referred(user_id, link)
             withdraw_balance = 0
             if balance > 250:
                 withdraw_balance = balance

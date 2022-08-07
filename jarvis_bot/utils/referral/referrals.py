@@ -84,3 +84,15 @@ def is_same(user, link):
         return False
 
 
+def update_referred(user, link):
+    conn = mysql_connection()
+    c = conn.cursor()
+    c.execute('select user from referrals where attached_referrals = %s', (link, ))
+    res = c.fetchall()
+    amount = int(len(res))
+    c.execute('update referrals set referred = %s where user = %s', (amount, user))
+    conn.commit()
+    conn.close()
+    return amount
+
+
