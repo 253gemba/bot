@@ -10,7 +10,7 @@ from keyboards.default import default_buttons
 from loader import dp, bot
 from utils.db_api.python_mysql import mysql_connection
 from utils.default_tg.default import get_user_menu, decode_link
-from utils.referral.referrals import is_valid, is_same, attach_referral
+from utils.referral.referrals import is_valid, is_same, attach_referral, create_referral
 from utils.steps.define_step import get_future_step
 
 
@@ -33,6 +33,7 @@ async def process_start_command(message: types.Message, state: FSMContext):
         if flag:
             same_flag = is_same(user_id, msgtext)
             if not same_flag:
+                create_referral(user_id, c, conn)
                 attach_referral(user_id, msgtext)
                 await message.answer(f'Вы перешли по реферальной ссылке. Приятного времени суток! :)')
             else:
