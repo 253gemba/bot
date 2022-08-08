@@ -33,7 +33,10 @@ async def process_start_command(message: types.Message, state: FSMContext):
         if flag:
             same_flag = is_same(user_id, msgtext)
             if not same_flag:
-                create_referral(user_id, c, conn)
+                c.execute('select id from referrals where user = %s', (user_id, ))
+                is_exists = c.fetchone()
+                if not is_exists:
+                    create_referral(user_id, c, conn)
                 attach_referral(user_id, msgtext)
                 await message.answer(f'Вы перешли по реферальной ссылке. Приятного времени суток! :)')
             else:
