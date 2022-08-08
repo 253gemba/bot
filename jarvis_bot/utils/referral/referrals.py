@@ -58,6 +58,8 @@ def check_referral(user_id):
     connection.close()
     if result:
         return True
+    else:
+        return False
 
 
 def is_valid(link):
