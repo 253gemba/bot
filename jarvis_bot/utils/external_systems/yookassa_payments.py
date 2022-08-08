@@ -56,8 +56,8 @@ async def update_payments(c, conn, payment_id=0):
         if payment_info:
             new_status = payment_info['status']
             if new_status == 'succeeded':
-                if check_referral(user_id):
-                    update_referral_bonus(user_id, payment_amount)
+                # if check_referral(user_id):
+                #     update_referral_bonus(user_id, payment_amount)
                 c.execute("update payments set payment_status = 'succeeded' "
                           "where payment_id = %s", (payment_id,))
                 conn.commit()
