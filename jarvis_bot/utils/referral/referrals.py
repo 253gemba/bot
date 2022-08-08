@@ -3,8 +3,8 @@ from utils.db_api.python_mysql import mysql_connection
 
 
 def create_referral(user_id, c, conn):
-    c.execute('select user_id, tg_username from users where user_id = %s', (user_id,))
-    unhashed = c.fetchone()[1]
+    c.execute('select tg_username from users where user_id = %s', (user_id,))
+    unhashed = c.fetchone()[0]
     hashed = md5(unhashed.encode())
     link = hashed.hexdigest()[:20]
     c.execute(
