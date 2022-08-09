@@ -57,13 +57,15 @@ def check_referral(user_id):
     curs = connection.cursor()
     print('середина проверки')
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
+    try:
+        result = curs.fetchone()[0]
+    except TypeError:
+        return False
     result = curs.fetchone()[0]
     connection.close()
     print('конец проверки')
-    if result:
-        return True
-    else:
-        return False
+    return True
+
 
 
 def is_valid(link):
