@@ -55,9 +55,11 @@ def check_referral(user_id):
     print('проверка')
     connection = mysql_connection()
     curs = connection.cursor()
+    print('середина проверки')
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
     result = curs.fetchone()[0]
     connection.close()
+    print('конец проверки')
     if result:
         return True
     else:
