@@ -60,6 +60,7 @@ def update_referral_bonus(current_user, payment_sum):
 def check_referral(user_id):
     print('start checking')
     connection = mysql_connection()
+    print('start checking 1')
     curs = connection.cursor()
     print('middle')
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
