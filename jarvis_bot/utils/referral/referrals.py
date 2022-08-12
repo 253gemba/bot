@@ -67,7 +67,7 @@ def check_referral(user_id):
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
     print('after middle')
     try:
-        print('try block')
+        print(f'try block {curs.fetchone()}')
         result = curs.fetchone()[0]
     except TypeError:
         return False
