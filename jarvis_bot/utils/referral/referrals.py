@@ -71,7 +71,7 @@ def check_referral(user_id):
         result = curs.fetchone()[0]
     except TypeError:
         return False
-    print('before assign')
+    print(curs.fetchall())
     result = curs.fetchone()[0]
     connection.close()
     print('stop checking')
