@@ -45,6 +45,7 @@ def attach_referral(user, referral):
 
 
 def update_referral_bonus(current_user, payment_sum):
+    print('start updating')
     con = mysql_connection()
     cur = con.cursor()
     referral = get_referral(current_user)[0]
@@ -52,10 +53,12 @@ def update_referral_bonus(current_user, payment_sum):
     user_id = fetch_user_referral(referral)[0]
     cur.execute('update referrals set bonus_balance = bonus_balance + %s where user = %s', (bonus, user_id))
     con.commit()
+    print('stop updating')
     con.close()
 
 
 def check_referral(user_id):
+    print('start checking')
     connection = mysql_connection()
     curs = connection.cursor()
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
@@ -65,6 +68,7 @@ def check_referral(user_id):
         return False
     result = curs.fetchone()[0]
     connection.close()
+    print('stop checking')
     return True
 
 
