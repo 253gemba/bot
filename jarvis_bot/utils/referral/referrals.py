@@ -5,7 +5,12 @@ from utils.db_api.python_mysql import mysql_connection
 def create_referral(user_id, c, conn):
     c.execute('select tg_username from users where user_id = %s', (user_id,))
     unhashed = c.fetchone()[0]
-    hashed = md5(unhashed.encode())
+    if unhashed:
+        hashed = md5(unhashed.encode())
+    else:
+        c.execute('select create_date from users where user_id = %s', (user_id, ))
+        unhashed = c.fetchone([0])
+        hashed = str(user_id) + str(unhashed)
     link = hashed.hexdigest()[:20]
     c.execute(
         'insert into referrals (user, referral, bonus_balance, referred) values (%s, %s, %s, %s)',
