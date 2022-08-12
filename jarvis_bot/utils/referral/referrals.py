@@ -58,23 +58,17 @@ def update_referral_bonus(current_user, payment_sum):
 
 
 def check_referral(user_id):
-    print('start checking')
-    print('start checking 1')
     connection = mysql_connection()
-    print('start checking 2')
     curs = connection.cursor()
-    print('middle')
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
-    print('after middle')
     try:
         print(f'try block {curs.fetchone()}')
         result = curs.fetchone()[0]
     except TypeError:
         return False
-    print(curs.fetchall())
+    print(f'after try block {curs.fetchall()}')
     result = curs.fetchone()[0]
     connection.close()
-    print('stop checking')
     return True
 
 
