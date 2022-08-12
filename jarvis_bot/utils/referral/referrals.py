@@ -10,7 +10,7 @@ def create_referral(user_id, c, conn):
     else:
         c.execute('select create_date from users where user_id = %s', (user_id, ))
         unhashed = c.fetchone()[0]
-        hashed = str(user_id) + str(unhashed)
+        hashed = md5((str(user_id) + str(unhashed)).encode())
     link = hashed.hexdigest()[:20]
     c.execute(
         'insert into referrals (user, referral, bonus_balance, referred) values (%s, %s, %s, %s)',
