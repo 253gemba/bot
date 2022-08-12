@@ -61,6 +61,7 @@ def check_referral(user_id):
     print('start checking')
     connection = mysql_connection()
     curs = connection.cursor()
+    print('middle')
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
     try:
         result = curs.fetchone()[0]
