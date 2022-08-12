@@ -9,7 +9,7 @@ def create_referral(user_id, c, conn):
         hashed = md5(unhashed.encode())
     else:
         c.execute('select create_date from users where user_id = %s', (user_id, ))
-        unhashed = c.fetchone([0])
+        unhashed = c.fetchone()[0]
         hashed = str(user_id) + str(unhashed)
     link = hashed.hexdigest()[:20]
     c.execute(
