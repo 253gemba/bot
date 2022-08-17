@@ -45,7 +45,7 @@ async def user_menu_header(message: types.Message, state: FSMContext):
             balance, link, attached = c.fetchone()
             referred = update_referred(user_id, link)
             withdraw_balance = 0
-            if balance > 250:
+            if balance >= 250:
                 withdraw_balance = balance
             await message.answer(f"🤝 <b>Партнерская программа</b>\n\n"
                                  f"🥇 <b>Статистика</b>:\n"
