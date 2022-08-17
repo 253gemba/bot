@@ -62,12 +62,9 @@ def check_referral(user_id):
     curs = connection.cursor()
     curs.execute('select attached_referrals from referrals where user = %s', (user_id, ))
     try:
-        print(f'try block {curs.fetchone()}')
-        result = curs.fetchone()[0]
+        result = curs.fetchone()
     except TypeError:
         return False
-    print(f'after try block {curs.fetchall()}')
-    result = curs.fetchone()[0]
     connection.close()
     return True
 
